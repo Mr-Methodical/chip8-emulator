@@ -1,0 +1,10 @@
+# Compiled output
+*.o
+*.out
+chip8
+
+# Build folder
+build/
+
+# Editor junk
+.vimrc.local
