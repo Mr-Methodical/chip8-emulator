@@ -1,6 +1,7 @@
 #ifndef CHIP8_H
 #define CHIP8_H
 
+#include <cstdint>
 class Chip8 {
 public:
   uint8_t registers[16]{}; // the cpu's scratchpad: 16 8-bit registers
@@ -14,6 +15,9 @@ public:
   uint8_t keypad[16]{}; // will have 1 or 0 in depending which key pressed
   uint32_t video[64 * 32]{}; // will only use 1 or 0 for black or white
   uint16_t opcode; // the instruction being done on that operation (2 bytes)
+  // loads game into memory:
+  void LoadROM(char const *filename);
 };
+
 
 #endif
