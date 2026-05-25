@@ -2,6 +2,7 @@
 #include <stdexcept>
 #include <cstdint>
 #include <fstream>
+#include <chrono>
 
 const unsigned int START_ADDRESS = 0x200;
 const unsigned int FONTSET_START_ADDRESS = 0x50;
@@ -27,7 +28,9 @@ uint8_t fontset[FONTSET_SIZE] =
 	0xF0, 0x80, 0xF0, 0x80, 0x80  // F
 };
 
-Chip8::Chip8() { // this is the constructor
+Chip8::Chip8()
+    : randGen(std::chrono::system_clock::now().time_since_epoch().count())
+  { // this is the constructor
   // where first instruction will be read:
   pc = START_ADDRESS;
 

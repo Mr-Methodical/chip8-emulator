@@ -2,6 +2,8 @@
 #define CHIP8_H
 
 #include <cstdint>
+#include <random>
+
 class Chip8 {
 public:
   uint8_t registers[16]{}; // the cpu's scratchpad: 16 8-bit registers
@@ -17,6 +19,8 @@ public:
   uint16_t opcode; // the instruction being done on that operation (2 bytes)
   // loads game into memory:
   void LoadROM(char const *filename);
+  std::default_random_engine randGen;
+  std::uniform_int_distribution<uint8_t> randByte{0, 255U};
 };
 
 
