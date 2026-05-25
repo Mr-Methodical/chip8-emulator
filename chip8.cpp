@@ -166,8 +166,8 @@ void Chip8::OP_8xy5() {
   uint8_t Vx = (opcode & 0x0F00u) >> 8u;
   uint8_t Vy = (opcode & 0x00F0u) >> 4u;
   // if underflows then Vf is set to 0 (only underflows if less):
-  register[0xFu] = (registers[Vx] >= registers[Vy]) ? 1 : 0;
-  register[Vx] -= registers[Vy];
+  registers[0xFu] = (registers[Vx] >= registers[Vy]) ? 1 : 0;
+  registers[Vx] -= registers[Vy];
 }
 
 void Chip8::OP_8xy6() {
@@ -181,6 +181,31 @@ void Chip8::OP_8xy7() {
   uint8_t Vx = (opcode & 0x0F00) >> 8u;
   uint8_t Vy = (opcode & 0x00F0) >> 4u;
   // 1 if good enough to not have underflow
-  registers[0xFu] = (Vy >= Vx) ? 1 : 0;
+  registers[0xFu] = (registers[Vy] >= registers[Vx]) ? 1 : 0;
   registers[Vx] = registers[Vy] - registers[Vx];
+}
+
+void Chip8::OP_8xyE() {
+  uint8_t Vx = (opcode & 0x0F00u) >> 8u;
+  // what is at the end
+  registers[0xFu] = (registers[Vx] & 0x80u) >> 7u;
+  registers[Vx] <<= 1;
+}
+
+void Chip8::OP_9xy0() {
+  // remember that pc would have already been incremented 
+  //   2 to be on the next instruction
+  uint8_t Vx = (opcode & 0x0F00u) >> 8u;
+  uint8_t Vy = (opcode & 0x00F0u) >> 4u;
+  if (registers[Vx] != registers[Vy]) pc += 2;
+}
+
+void Chip8::OP_Annn() {
+  uint16_t addr = (opcode & 0x0FFFu);
+  index = addr;
+}
+
+void Chip8::OP_Bnnn() {
+  uint16_t address = (opcode & 0x0FFFu);
+  pc = registers[0] + address;
 }

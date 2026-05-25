@@ -57,6 +57,14 @@ public:
   void OP_8xy6();
   // Vy - Vx stored in Vx but if underflow put 0 in Vf, else 1:
   void OP_8xy7();
+  // left shift and will carry 1 into Vf for most significant digit:
+  void OP_8xyE();
+  // skip if Vx != Vy:
+  void OP_9xy0();
+  // set the index register to nnn:
+  void OP_Annn();
+  // jump to location nnn + V0:
+  void OP_Bnnn();
 };
 
 
