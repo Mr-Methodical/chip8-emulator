@@ -31,6 +31,32 @@ public:
   void OP_1nnn();
   // call subroutine at nnn:
   void OP_2nnn();
+  // skip next instruction if register x is kk
+  void OP_3xkk();
+  // skip if not equal to:
+  void OP_4xkk();
+  // skip next instruction if Vx = Vy
+  void OP_5xy0();
+  // set Vx to kk
+  void OP_6xkk();
+  // add kk to register x, no carry flag
+  void OP_7xkk();
+  // set Vx = Vy
+  void OP_8xy0();
+  // Set Vx = Vx OR Vy:
+  void OP_8xy1();
+  // Set Vx = Vx AND Vy:
+  void OP_8xy2();
+  // Set Vx = Vx XOR Vy:
+  void OP_8xy3();
+  // Set Vx = Vx + Vy and Vf = carry:
+  void OP_8xy4();
+  // set Vx = Vx - Vy and Vf will be 1 if we did not have underflow; 1 else:
+  void OP_8xy5();
+  // right shift on Vx and will carry 1 if it was there:
+  void OP_8xy6();
+  // Vy - Vx stored in Vx but if underflow put 0 in Vf, else 1:
+  void OP_8xy7();
 };
 
 

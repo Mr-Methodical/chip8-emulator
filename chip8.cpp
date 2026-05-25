@@ -91,3 +91,96 @@ void Chip8::OP_2nnn() {
   stack[sp++] = pc;
   pc = address;
 }
+
+void Chip8::OP_3xkk() {
+  uint8_t Vx = (opcode & 0x0F00u) >> 8u;
+  uint8_t val = opcode & 0x00FFu;
+  if (registers[Vx] == val) {
+    // since the cycle would have already put us on next instruction
+    //   we just need to add 2 to it to skip this next instruction:
+    pc += 2;
+  }
+}
+
+void Chip8::OP_4xkk() {
+  uint8_t Vx = (opcode & 0x0F00u) >> 8u;
+  uint8_t val = opcode & 0x00FFu;
+  if (registers[Vx] != val) {
+    pc += 2;
+  }
+}
+
+void Chip8::OP_5xy0() {
+  uint8_t Vx = (opcode & 0x0F00u) >> 8u;
+  uint8_t Vy = (opcode & 0x00F0u) >> 4u;
+  if (registers[Vx] == registers[Vy]) {
+    pc += 2;
+  }
+}
+
+void Chip8::OP_6xkk() {
+  uint8_t Vx = (opcode & 0x0F00u) >> 8u;
+  uint8_t byte = opcode & 0x00FFu;
+  registers[Vx] = byte;
+}
+
+void Chip8::OP_7xkk() {
+  uint8_t Vx = (opcode & 0x0F00u) >> 8u;
+  uint8_t byte = opcode & 0x00FFu;
+  registers[Vx] += byte;
+}
+
+void Chip8::OP_8xy0() {
+  uint8_t Vx = (opcode & 0x0F00u) >> 8u;
+  uint8_t Vy = (opcode & 0x00F0u) >> 4u;
+  registers[Vx] = registers[Vy];
+}
+
+void Chip8::OP_8xy1() {
+  uint8_t Vx = (opcode & 0x0F00u) >> 8u;
+  uint8_t Vy = (opcode & 0x00F0u) >> 4u;
+  registers[Vx] |= registers[Vy];
+}
+
+void Chip8::OP_8xy2() {
+  uint8_t Vx = (opcode & 0x0F00u) >> 8u;
+  uint8_t Vy = (opcode & 0x00F0u) >> 4u;
+  registers[Vx] &= registers[Vy];
+}
+
+void Chip8::OP_8xy3() {
+  uint8_t Vx = (opcode & 0x0F00u) >> 8u;
+  uint8_t Vy = (opcode & 0x00F0u) >> 4u;
+  registers[Vx] ^= registers[Vy];
+}
+
+void Chip8::OP_8xy4() {
+  uint8_t Vx = (opcode & 0x0F00u) >> 8u;
+  uint8_t Vy = (opcode & 0x00F0u) >> 4u;
+  uint16_t sum = registers[Vx] + registers[Vy];
+  registers[0xFu] = (sum > 255u) ? 1 : 0;
+  registers[Vx] = sum & 0xFFu;
+}
+
+void Chip8::OP_8xy5() {
+  uint8_t Vx = (opcode & 0x0F00u) >> 8u;
+  uint8_t Vy = (opcode & 0x00F0u) >> 4u;
+  // if underflows then Vf is set to 0 (only underflows if less):
+  register[0xFu] = (registers[Vx] >= registers[Vy]) ? 1 : 0;
+  register[Vx] -= registers[Vy];
+}
+
+void Chip8::OP_8xy6() {
+  uint8_t Vx = (opcode & 0x0F00u) >> 8u;
+  registers[0xFu] = registers[Vx] & 0x1u;
+  // essentially dividing the number by 2:
+  registers[Vx] >>= 1;
+}
+
+void Chip8::OP_8xy7() {
+  uint8_t Vx = (opcode & 0x0F00) >> 8u;
+  uint8_t Vy = (opcode & 0x00F0) >> 4u;
+  // 1 if good enough to not have underflow
+  registers[0xFu] = (Vy >= Vx) ? 1 : 0;
+  registers[Vx] = registers[Vy] - registers[Vx];
+}
