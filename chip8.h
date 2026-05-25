@@ -20,7 +20,17 @@ public:
   // loads game into memory:
   void LoadROM(char const *filename);
   std::default_random_engine randGen;
-  std::uniform_int_distribution<uint8_t> randByte{0, 255U};
+  std::uniform_int_distribution<uint8_t> randByte{0, 255u};
+  // now we need to implement the 34 different possible instructions
+  // the ROM could have
+  // Clear the display:
+  void OP_00E0();
+  // returning from a subroutine:
+  void OP_00EE();
+  // Jump to location nnn:
+  void OP_1nnn();
+  // call subroutine at nnn:
+  void OP_2nnn();
 };
 
 

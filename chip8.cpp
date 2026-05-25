@@ -1,4 +1,6 @@
 #include "chip8.h"
+#include <cassert>
+#include <cstring>
 #include <stdexcept>
 #include <cstdint>
 #include <fstream>
@@ -63,4 +65,29 @@ void Chip8::LoadROM(char const *filename) {
     }
     delete[] buffer;
   }
+}
+
+// Clears the display:
+void Chip8::OP_00E0() {
+  memset(video, 0, sizeof(video));
+}
+
+void Chip8::OP_00EE() {
+  assert(sp > 0 && "stack underflow");
+  --sp;
+  pc = stack[sp];
+}
+
+void Chip8::OP_1nnn() {
+  uint16_t address = opcode & 0x0FFFu;
+  pc = address;
+}
+
+void Chip8::OP_2nnn() {
+  assert(sp < 16 && "stack overflow");
+  uint16_t address = opcode & 0x0FFFu;
+  // note that pc will have been increased by 2 so we don't run into 
+  //   an infinite loop
+  stack[sp++] = pc;
+  pc = address;
 }
