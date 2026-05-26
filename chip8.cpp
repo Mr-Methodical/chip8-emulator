@@ -209,3 +209,41 @@ void Chip8::OP_Bnnn() {
   uint16_t address = (opcode & 0x0FFFu);
   pc = registers[0] + address;
 }
+
+void Chip8::OP_Cxkk() {
+  uint8_t Vx = (opcode & 0x0F00u) >> 8u;
+  uint8_t byte = (opcode & 0x00FFu);
+  registers[Vx] = randByte(randGen) & byte;
+}
+
+void Chip8::OP_Dxyn() {
+  uint8_t Vx = (opcode & 0x0F00u) >> 8u;
+  uint8_t Vy = (opcode & 0x00F0u) >> 4u;
+  uint8_t height = (opcode & 0x000Fu);
+  // we wrap if it goes past our video
+  uint8_t x_pos = registers[Vx] % VIDEO_WIDTH;
+  uint8_t y_pos = registers[Vy] % VIDEO_HEIGHT;
+  // assume there have been no collisions:
+  registers[0xFu] = 0;
+  for (uint8_t row = 0; row < height; ++row) {
+    // index register is where we want to start pulling sprite from:
+    uint8_t sprite_byte = memory[index + row];
+    for (uint8_t col = 0; col < 8; ++col) {
+      // sprite_pixel will either be 0 or non_zero (not necessarily 1)
+      uint8_t sprite_pixel = sprite_byte & (0x80u >> col);
+      // coordinates for the video:
+      uint8_t draw_x = (x_pos + col) % VIDEO_WIDTH;
+      uint8_t draw_y = (y_pos + row) % VIDEO_HEIGHT;
+      uint32_t *screen_pixel = &video[draw_x * VIDEO_WIDTH + draw_y];
+      // if sprite_pixel is off we don't need to change anything
+      if (sprite_pixel) {
+        if (*screen_pixel) {
+          // there has been a collision:
+          registers[0xFu] = 1;
+        }
+        // we are XORing it with all 1's, so we flip what it currently is
+        *screen_pixel ^= 0xFFFFFFFF;
+      }
+    }
+  }
+}

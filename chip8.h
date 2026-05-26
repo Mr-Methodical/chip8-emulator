@@ -4,6 +4,8 @@
 #include <cstdint>
 #include <random>
 
+const unsigned int VIDEO_WIDTH = 64;
+const unsigned int VIDEO_HEIGHT = 32;
 class Chip8 {
 public:
   uint8_t registers[16]{}; // the cpu's scratchpad: 16 8-bit registers
@@ -15,7 +17,7 @@ public:
   uint8_t delayTimer{}; // counts down from whatever value put in it
   uint8_t soundTimer{}; // timer for how long to play song (will count down)
   uint8_t keypad[16]{}; // will have 1 or 0 in depending which key pressed
-  uint32_t video[64 * 32]{}; // will only use 1 or 0 for black or white
+  uint32_t video[VIDEO_WIDTH * VIDEO_HEIGHT]{}; // will only use 1 or 0 for black or white
   uint16_t opcode; // the instruction being done on that operation (2 bytes)
   // loads game into memory:
   void LoadROM(char const *filename);
@@ -65,6 +67,13 @@ public:
   void OP_Annn();
   // jump to location nnn + V0:
   void OP_Bnnn();
+  // Set Vx to a random byte AND kk:
+  void OP_Cxkk();
+  // Starting at the memory location in the index register, we are going
+  //   to be reading off n bytes and putting those into the video array
+  //   starting at (Vx, Vy) in the video array as the top left. For
+  //   collisions we set Vf to 1:
+  void OP_Dxyn();
 };
 
 
