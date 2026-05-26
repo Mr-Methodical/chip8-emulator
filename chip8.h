@@ -74,6 +74,31 @@ public:
   //   starting at (Vx, Vy) in the video array as the top left. For
   //   collisions we set Vf to 1:
   void OP_Dxyn();
+  // skip next instruction if key with value in Vx is pressed:
+  void OP_Ex9E();
+  // skip next instruction if key with value in Vx is not pressed:
+  void OP_ExA1();
+  // Set the number in register Vx to be the delaytimer:
+  void OP_Fx07();
+  // basically creates an infinite loop till the user presses a key:
+  void OP_Fx0A();
+  // set delay timer to Vx:
+  void OP_Fx15();
+  // set sound timer to Vx:
+  void OP_Fx18();
+  // increase index register by Vx:
+  void OP_Fx1E();
+  // setting the index register to the start address of the sprite for digit
+  //   Vx:
+  void OP_Fx29();
+  // Stores the binary coded decimal starting at index register. So it will put
+  //   the hundred's digit at the index register address, then 10's at 
+  //   I + 1 and 1's at I + 2:
+  void OP_Fx33();
+  // stores registers V0 to Vx in memory starting at the index register
+  void OP_Fx55();
+  // read the memory into the registers from V0 up to Vx:
+  void OP_Fx65();
 };
 
 
