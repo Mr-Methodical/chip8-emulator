@@ -99,6 +99,24 @@ public:
   void OP_Fx55();
   // read the memory into the registers from V0 up to Vx:
   void OP_Fx65();
+  // the tables
+  using Chip8Func = void (Chip8::*)();
+  Chip8Func table[0xF + 1];
+	Chip8Func table0[0xE + 1];
+	Chip8Func table8[0xE + 1];
+	Chip8Func tableE[0xE + 1];
+	Chip8Func tableF[0x65 + 1];
+  // the functions that table will be calling when it
+  //   wants to go to a subtable:
+  // The idea is basically we are bitmasking to find the specific index
+  //   and then using it to go into the table we want to pull the function
+  //   pointer and then we are dereferencing to get us the function and 
+  //   then calling it on our current object
+  void Table0() { ((*this).*(table0[opcode & 0x000Fu]))()}
+  void Table8() { ((*this).*(table8[opcode & 0x000Fu]))()}
+  void TableE() { ((*this).*(tableE[opcode & 0x000Fu]))()}
+  void TableF() { ((*this).*(tableF[opcode & 0x00FFu]))()}
+  void OP_NULL() {}
 };
 
 
