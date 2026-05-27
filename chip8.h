@@ -117,6 +117,8 @@ public:
   void TableE() { ((*this).*(tableE[opcode & 0x000Fu]))()}
   void TableF() { ((*this).*(tableF[opcode & 0x00FFu]))()}
   void OP_NULL() {}
+
+  void Cycle();
 };
 
 
