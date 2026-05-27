@@ -414,7 +414,7 @@ void Chip8::OP_Fx65() {
 
 void Chip8::Cycle() {
   // Fetch:
-  opcode = (static_cast<uint16_t>emory[pc] << 8u) | memory[pc + 1];
+  opcode = (static_cast<uint16_t>memory[pc] << 8u) | memory[pc + 1];
   // pc should be on next instruction after we got our current one:
   pc += 2;
   // decode and execute:

@@ -112,10 +112,10 @@ public:
   //   and then using it to go into the table we want to pull the function
   //   pointer and then we are dereferencing to get us the function and 
   //   then calling it on our current object
-  void Table0() { ((*this).*(table0[opcode & 0x000Fu]))()}
-  void Table8() { ((*this).*(table8[opcode & 0x000Fu]))()}
-  void TableE() { ((*this).*(tableE[opcode & 0x000Fu]))()}
-  void TableF() { ((*this).*(tableF[opcode & 0x00FFu]))()}
+  void Table0() { ((*this).*(table0[opcode & 0x000Fu]))(); }
+  void Table8() { ((*this).*(table8[opcode & 0x000Fu]))(); }
+  void TableE() { ((*this).*(tableE[opcode & 0x000Fu]))(); }
+  void TableF() { ((*this).*(tableF[opcode & 0x00FFu]))(); }
   void OP_NULL() {}
 
   void Cycle();
