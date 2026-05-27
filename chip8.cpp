@@ -411,3 +411,17 @@ void Chip8::OP_Fx65() {
     registers[i] = memory[index + i];
   }
 }
+
+void Chip8::Cycle() {
+  // Fetch:
+  opcode = (static_cast<uint16_t>emory[pc] << 8u) | memory[pc + 1];
+  // pc should be on next instruction after we got our current one:
+  pc += 2;
+  // decode and execute:
+  // 'this' is the current instance of the chip8 hardware and we are
+  //   are calling the specific function that this opcode represents on 
+  //   our emulated hardware:
+  ((*this).*(table[(opcode & 0xF000u) >> 12u]))();
+  if (delayTimer > 0) --delayTimer;
+  if (soundTimer > 0) --soundTimer;
+}
