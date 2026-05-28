@@ -27,15 +27,18 @@ int main(int argc, char *argv[]) {
 
   while (true) {
     // we end if user exits:
-    if (platform.processInput(chip8.keypad)) break;
+    if (platform.ProcessInput(chip8.keypad)) break;
     auto currentTime = std::chrono::high_resolution_clock::now();
-    float dt = 
+    float dt = std::chrono::duration<float,std::chrono::milliseconds::period>
+      (currentTime - lastCycleTime).count();
 
     if (dt > cycleDelay) {
       lastCycleTime = currentTime;
       // Does one instruction, it goes through that fetch, decode,
       //   execute, and store cycle
       chip8.Cycle();
+      // make the video buffer visible to the screen:
+      platform.Update(chip8.video, videoPitch);
     }
   }
   return 0;
