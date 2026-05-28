@@ -101,6 +101,8 @@ void Chip8::LoadROM(char const *filename) {
   // open the file, this creates the connection to it
   // we read it only as binary and start at the end
   std::ifstream file(filename, std::ios::binary | std::ios::ate);
+  // there could be the case that the file is not in the directory, so
+  //   then this wouldn't run
   if (file.is_open()) {
     // we need to know size of file so we get tellg to us where the end is
     std::streampos size = file.tellg();
