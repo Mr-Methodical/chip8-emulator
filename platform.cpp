@@ -7,7 +7,7 @@ Platform::Platform(char const *title, int windowWidth, int windowHeight,
   // but texture is the size in bytes of how long our thing is in the GPU
   
   // Starting Simple directmedia layer video:
-  SDL_INIT(SDL_INIT_VIDEO);
+  SDL_Init(SDL_INIT_VIDEO);
   // x and y for where on screen in top left to display and shown right away:
   window = SDL_CreateWindow(title, 0, 0, windowWidth,
                             windowHeight, SDL_WINDOW_SHOWN);
@@ -31,4 +31,22 @@ Platform::~Platform() {
   SDL_DestroyWindow(window);
   SDL_Quit();
 }
+
+// void *buffer because it is generic SDL can take different video buffers
+//   not just uint32_t and pitch is just bytes per row
+void Platform::Update(void const *buffer, int pitch) {
+  // Gives GPU a copy of our video state
+  SDL_UpdateTexture(texture, // which texture we are updating
+                    nullptr, // specific rectangle but we do nullptr as we
+                             // are updating the whole screen
+                    buffer, // source pixel data
+                    pitch);
+  SDL_RendererClear(renderer); // cleans it up
+  SDL_RendererCopy(renderer,
+                    texture,
+                    nullptr, // source rectangle from texture
+                    nullptr); // destination rectangle (nullptr = fill window)
+  SDL_RendererPresent(renderer); // show it on screen
+}
+
 
