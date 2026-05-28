@@ -19,6 +19,7 @@ public:
   uint8_t keypad[16]{}; // will have 1 or 0 in depending which key pressed
   uint32_t video[VIDEO_WIDTH * VIDEO_HEIGHT]{}; // will only use 1 or 0 for black or white
   uint16_t opcode; // the instruction being done on that operation (2 bytes)
+  Chip8();
   // loads game into memory:
   void LoadROM(char const *filename);
   std::default_random_engine randGen;
