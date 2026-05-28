@@ -1,4 +1,5 @@
 #include "chip8.h"
+#include <cstdio>
 #include <cassert>
 #include <cstring>
 #include <stdexcept>
@@ -418,6 +419,7 @@ void Chip8::Cycle() {
   // Fetch:
   opcode = (static_cast<uint16_t>(memory[pc]) << 8u) | memory[pc + 1];
   // pc should be on next instruction after we got our current one:
+  printf("PC: %04X  Opcode: %04X\n", pc, opcode);
   pc += 2;
   // decode and execute:
   // 'this' is the current instance of the chip8 hardware and we are
