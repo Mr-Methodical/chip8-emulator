@@ -7,7 +7,7 @@
 const unsigned int VIDEO_WIDTH = 64;
 const unsigned int VIDEO_HEIGHT = 32;
 class Chip8 {
-public:
+private:
   uint8_t registers[16]{}; // the cpu's scratchpad: 16 8-bit registers
   uint8_t memory[4096]{}; // 4KB of Chip-8 Memory with certain parts reserved
   uint16_t index{}; // register for holding addresses since memory up to 0xFFF
@@ -19,6 +19,10 @@ public:
   uint8_t keypad[16]{}; // will have 1 or 0 in depending which key pressed
   uint32_t video[VIDEO_WIDTH * VIDEO_HEIGHT]{}; // will only use 1 or 0 for black or white
   uint16_t opcode; // the instruction being done on that operation (2 bytes)
+public:
+  const uint32_t * GetVideo() const { return video; }
+  uint8_t *GetKeypad { return keypad; }
+  uint8_t GetSoundTimer() const { return soundTimer; }
   Chip8();
   // loads game into memory:
   void LoadROM(char const *filename);
