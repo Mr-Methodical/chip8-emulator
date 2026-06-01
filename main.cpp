@@ -9,7 +9,7 @@ int main(int argc, char *argv[]) {
     std::exit(EXIT_FAILURE);
   }
   int videoScale = std::stoi(argv[1]);
-  int cycleDelay = std::stoi(argv[2]);
+  int cycleDelay = std::stoi(argv[2]); // number of milliseconds to wait
   char const *romFilename = argv[3];
   
   // window will appear, renderer gets created and texture gets created:
@@ -24,7 +24,7 @@ int main(int argc, char *argv[]) {
   int videoPitch = sizeof(chip8.video[0]) * VIDEO_WIDTH;
   // getting the precise time:
   auto lastCycleTime = std::chrono::high_resolution_clock::now();
-
+  
   while (true) {
     // we end if user exits:
     if (platform.ProcessInput(chip8.GetKeypad())) break;

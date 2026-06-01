@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git -c safe.directory='*' log --oneline -20)",
+      "Bash(git -c safe.directory='*' status)",
+      "Bash(git *)"
+    ]
+  }
+}
