@@ -21,7 +21,7 @@ int main(int argc, char *argv[]) {
   // load the instructions into memory:
   chip8.LoadROM(romFilename);
   // pitch is just the number of bytes per row:
-  int videoPitch = sizeof(chip8.video[0]) * VIDEO_WIDTH;
+  int videoPitch = sizeof(*chip8.GetVideo()) * VIDEO_WIDTH;
   // getting the precise time:
   auto lastCycleTime = std::chrono::high_resolution_clock::now();
   

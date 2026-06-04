@@ -19,15 +19,30 @@ private:
   uint8_t keypad[16]{}; // will have 1 or 0 in depending which key pressed
   uint32_t video[VIDEO_WIDTH * VIDEO_HEIGHT]{}; // will only use 1 or 0 for black or white
   uint16_t opcode; // the instruction being done on that operation (2 bytes)
-public:
-  const uint32_t * GetVideo() const { return video; }
-  uint8_t *GetKeypad { return keypad; }
-  uint8_t GetSoundTimer() const { return soundTimer; }
-  Chip8();
-  // loads game into memory:
-  void LoadROM(char const *filename);
+  // only OP_Cxkk uses it which is internal so we can have private for both:
   std::default_random_engine randGen;
   std::uniform_int_distribution<uint8_t> randByte{0, 255u};
+  // for the tables they should be private as the only function that needs
+  //   them is internal it is Cycle (which goes through one CPU cycle
+  //   and needs to be able to know what action to perform)
+  // the tables
+  using Chip8Func = void (Chip8::*)();
+  Chip8Func table[0xF + 1];
+	Chip8Func table0[0xE + 1];
+	Chip8Func table8[0xE + 1];
+	Chip8Func tableE[0xE + 1];
+	Chip8Func tableF[0x65 + 1];
+  // the functions that table will be calling when it
+  //   wants to go to a subtable:
+  // The idea is basically we are bitmasking to find the specific index
+  //   and then using it to go into the table we want to pull the function
+  //   pointer and then we are dereferencing to get us the function and 
+  //   then calling it on our current object
+  void Table0() { ((*this).*(table0[opcode & 0x000Fu]))(); }
+  void Table8() { ((*this).*(table8[opcode & 0x000Fu]))(); }
+  void TableE() { ((*this).*(tableE[opcode & 0x000Fu]))(); }
+  void TableF() { ((*this).*(tableF[opcode & 0x00FFu]))(); }
+  void OP_NULL() {}
   // now we need to implement the 34 different possible instructions
   // the ROM could have
   // Clear the display:
@@ -104,25 +119,15 @@ public:
   void OP_Fx55();
   // read the memory into the registers from V0 up to Vx:
   void OP_Fx65();
-  // the tables
-  using Chip8Func = void (Chip8::*)();
-  Chip8Func table[0xF + 1];
-	Chip8Func table0[0xE + 1];
-	Chip8Func table8[0xE + 1];
-	Chip8Func tableE[0xE + 1];
-	Chip8Func tableF[0x65 + 1];
-  // the functions that table will be calling when it
-  //   wants to go to a subtable:
-  // The idea is basically we are bitmasking to find the specific index
-  //   and then using it to go into the table we want to pull the function
-  //   pointer and then we are dereferencing to get us the function and 
-  //   then calling it on our current object
-  void Table0() { ((*this).*(table0[opcode & 0x000Fu]))(); }
-  void Table8() { ((*this).*(table8[opcode & 0x000Fu]))(); }
-  void TableE() { ((*this).*(tableE[opcode & 0x000Fu]))(); }
-  void TableF() { ((*this).*(tableF[opcode & 0x00FFu]))(); }
-  void OP_NULL() {}
-
+public:
+  // the trailing const says we won't change Chip8 members but leading
+  //   const says that whoever gets the pointer can't change anything in it
+  const uint32_t * GetVideo() const { return video; }
+  uint8_t *GetKeypad() { return keypad; }
+  uint8_t GetSoundTimer() const { return soundTimer; }
+  Chip8();
+  // loads game into memory:
+  void LoadROM(char const *filename);
   void Cycle();
 };
 
