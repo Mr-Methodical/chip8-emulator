@@ -13,15 +13,16 @@ int main(int argc, char *argv[]) {
   char const *romFilename = argv[3];
   
   // window will appear, renderer gets created and texture gets created:
-  Platform platform("CHIP-8 Emulator", VIDEO_WIDTH * videoScale, 
-                    VIDEO_HEIGHT * videoScale, VIDEO_WIDTH, VIDEO_HEIGHT);
+  Platform platform("CHIP-8 Emulator", Chip8::VIDEO_WIDTH * videoScale, 
+                    Chip8::VIDEO_HEIGHT * videoScale, Chip8::VIDEO_WIDTH, 
+                    Chip8::VIDEO_HEIGHT);
   // seeds random value with time, sets pc to 0x200, loads in fonts, and
   //   wires up function pointer table:
   Chip8 chip8;
   // load the instructions into memory:
   chip8.LoadROM(romFilename);
   // pitch is just the number of bytes per row:
-  int videoPitch = sizeof(*chip8.GetVideo()) * VIDEO_WIDTH;
+  int videoPitch = sizeof(*chip8.GetVideo()) * Chip8::VIDEO_WIDTH;
   // getting the precise time:
   auto lastCycleTime = std::chrono::high_resolution_clock::now();
   

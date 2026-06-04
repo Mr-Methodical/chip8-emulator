@@ -4,9 +4,19 @@
 #include <cstdint>
 #include <random>
 
-const unsigned int VIDEO_WIDTH = 64;
-const unsigned int VIDEO_HEIGHT = 32;
 class Chip8 {
+public:
+  static constexpr unsigned int VIDEO_WIDTH = 64;
+  static constexpr unsigned int VIDEO_HEIGHT = 32;
+  // the trailing const says we won't change Chip8 members but leading
+  //   const says that whoever gets the pointer can't change anything in it
+  const uint32_t * GetVideo() const { return video; }
+  uint8_t *GetKeypad() { return keypad; }
+  uint8_t GetSoundTimer() const { return soundTimer; }
+  Chip8();
+  // loads game into memory:
+  void LoadROM(char const *filename);
+  void Cycle();
 private:
   uint8_t registers[16]{}; // the cpu's scratchpad: 16 8-bit registers
   uint8_t memory[4096]{}; // 4KB of Chip-8 Memory with certain parts reserved
@@ -119,16 +129,29 @@ private:
   void OP_Fx55();
   // read the memory into the registers from V0 up to Vx:
   void OP_Fx65();
-public:
-  // the trailing const says we won't change Chip8 members but leading
-  //   const says that whoever gets the pointer can't change anything in it
-  const uint32_t * GetVideo() const { return video; }
-  uint8_t *GetKeypad() { return keypad; }
-  uint8_t GetSoundTimer() const { return soundTimer; }
-  Chip8();
-  // loads game into memory:
-  void LoadROM(char const *filename);
-  void Cycle();
+  static constexpr unsigned int START_ADDRESS = 0x200;
+  static constexpr unsigned int FONTSET_START_ADDRESS = 0x50;
+  static constexpr unsigned int FONTSET_SIZE = 80;
+
+  static constexpr uint8_t fontset[FONTSET_SIZE] =
+  {
+    0xF0, 0x90, 0x90, 0x90, 0xF0, // 0
+    0x20, 0x60, 0x20, 0x20, 0x70, // 1
+    0xF0, 0x10, 0xF0, 0x80, 0xF0, // 2
+    0xF0, 0x10, 0xF0, 0x10, 0xF0, // 3
+    0x90, 0x90, 0xF0, 0x10, 0x10, // 4
+    0xF0, 0x80, 0xF0, 0x10, 0xF0, // 5
+    0xF0, 0x80, 0xF0, 0x90, 0xF0, // 6
+    0xF0, 0x10, 0x20, 0x40, 0x40, // 7
+    0xF0, 0x90, 0xF0, 0x90, 0xF0, // 8
+    0xF0, 0x90, 0xF0, 0x10, 0xF0, // 9
+    0xF0, 0x90, 0xF0, 0x90, 0x90, // A
+    0xE0, 0x90, 0xE0, 0x90, 0xE0, // B
+    0xF0, 0x80, 0x80, 0x80, 0xF0, // C
+    0xE0, 0x90, 0x90, 0x90, 0xE0, // D
+    0xF0, 0x80, 0xF0, 0x80, 0xF0, // E
+    0xF0, 0x80, 0xF0, 0x80, 0x80  // F
+  };
 };
 
 
