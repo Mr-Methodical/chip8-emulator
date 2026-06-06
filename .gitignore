@@ -1,6 +1,8 @@
 # Compiled output
 *.o
 *.out
+*.ch8
+*.swp
 chip8
 
 # Build folder
