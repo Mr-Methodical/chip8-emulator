@@ -17,6 +17,7 @@ int main(int argc, char *argv[]) {
   Platform platform("CHIP-8 Emulator", Chip8::VIDEO_WIDTH * videoScale, 
                     Chip8::VIDEO_HEIGHT * videoScale, Chip8::VIDEO_WIDTH, 
                     Chip8::VIDEO_HEIGHT);
+  Sound sound; // buzzer starts as false so no sound initially
   // seeds random value with time, sets pc to 0x200, loads in fonts, and
   //   wires up function pointer table:
   Chip8 chip8;
@@ -39,6 +40,9 @@ int main(int argc, char *argv[]) {
       // Does one instruction, it goes through that fetch, decode,
       //   execute, and store cycle
       chip8.Cycle();
+      // basically callback is always filling buffer but when off it just 
+      //   is setting it to 0:
+      sound.SetOn(chip8.GetSoundTimer() > 0);
       // make the video buffer visible to the screen:
       platform.Update(chip8.GetVideo(), videoPitch);
     }
