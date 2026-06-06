@@ -2,6 +2,7 @@
 #include <iostream>
 #include "chip8.h"
 #include "platform.h"
+#include "sound.h"
 
 int main(int argc, char *argv[]) {
   if (argc != 4) {

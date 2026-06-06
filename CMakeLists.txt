@@ -9,6 +9,7 @@ add_executable(chip8
   main.cpp
   chip8.cpp
   platform.cpp
+  sound.cpp
 )
 
 target_include_directories(chip8 PRIVATE ${SDL2_INCLUDE_DIRS})
